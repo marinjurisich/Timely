@@ -27,25 +27,6 @@ namespace Timely.Controllers {
         [HttpGet]
         public JsonResult Get() {
 
-
-
-
-
-            //string query = "select * from dbo.Project;";
-            //DataTable table = new DataTable();
-            //string sqlDataSource = _configuration.GetConnectionString("TimelyConnection");
-
-            //SqlDataReader myReader;
-            //using(SqlConnection myConn = new SqlConnection(sqlDataSource)) {
-            //    myConn.Open();
-            //    using (SqlCommand sqlCommand = new SqlCommand(query, myConn)) {
-            //        myReader = sqlCommand.ExecuteReader();
-            //        table.Load(myReader);
-            //        myConn.Close();
-            //    }
-                
-            //}
-
             return new JsonResult(_context.Projects);
 
         }

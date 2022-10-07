@@ -2,7 +2,7 @@
   <button class="btn btn-primary btn-lg" (click)="start_timer();" *ngIf="clicked==false; else stopButton;">Start</button>
   <ng-template #stopButton>
     <!-- Trigger/Open The Modal -->
-    <button id="myBtn" class="btn btn-primary btn-lg" (click)="open_modal();">Stop</button>
+    <button id="myBtn" class="btn btn-primary btn-lg" (click)="stop_timer();">Stop</button>
   </ng-template>
 
 </div>
@@ -16,7 +16,7 @@
   <div class="modal_content">
 
     <div class="modal-header">
-      <h5 class="modal-title">Modal title</h5>
+      <h5 class="modal-title">Project</h5>
       <button type="button" class="close" (click)="close_modal();" data-dismiss="modal" aria-label="Close">
         <span aria-hidden="true">&times;</span>
       </button>
@@ -25,50 +25,40 @@
       <div class="pt-3 justify-content-around">
         <input type="text" placeholder="Input project name" class="form-control" />
       </div>
-      <p>Some text in the Modal..</p>
+      
     </div>
     <div class="modal-footer">
-      <button type="button" class="btn btn-primary">Save changes</button>
+      <button type="button" class="btn btn-primary" (click)="load_data();close_modal();">Save changes</button>
       <button type="button" class="btn btn-secondary" (click)="close_modal();" data-dismiss="modal">Close</button>
     </div>
   </div>
   </div>
 
-<!-- Counter -->
-<div class="pt-3 mb-3">
-  <p id="counter_display">{{ timerDisplay.seconds["digit1"]}}: {{ timerDisplay.seconds["digit2"] }}</p>
-</div>
 
+<div class="w-100 justify-content-center d-block mt-3">
+  <!-- Counter -->
+  <div class="pt-3 mb-3">
+    <p class="text-muted h3" id="counter_display">{{ this.timerDisplay["hours"]["digit1"]}}{{ this.timerDisplay["hours"]["digit2"] }}:{{ timerDisplay.minutes["digit1"]}}{{ timerDisplay.minutes["digit2"] }}:{{ timerDisplay.seconds["digit1"]}}{{ timerDisplay.seconds["digit2"] }}</p>
+  </div>
 
-<div class="w-100 justify-content-center d-block pt-5">
-  <table class="table table-striped">
+  <table id="dataTable" class="table table-striped d-none">
     <thead>
       <tr>
         <th scope="col">#</th>
-        <th scope="col">First</th>
-        <th scope="col">Last</th>
-        <th scope="col">Handle</th>
+        <th scope="col">Project</th>
+        <th scope="col">Start</th>
+        <th scope="col">End</th>
+        <th scope="col">Duration</th>
       </tr>
     </thead>
     <tbody>
-      <tr>
-        <th scope="row">1</th>
-        <td>Mark</td>
-        <td>Otto</td>
-        <td>@mdo</td>
+      <tr *ngFor='let p of project; let i = index'> 
+        <th scope="row">{{i+1}}</th>
+        <td>{{p.Name}}</td>
+        <td>{{p.StartTime}}</td>
+        <td>{{p.EndTime}}</td>
       </tr>
-      <tr>
-        <th scope="row">2</th>
-        <td>Jacob</td>
-        <td>Thornton</td>
-        <td>@fat</td>
-      </tr>
-      <tr>
-        <th scope="row">3</th>
-        <td>Larry</td>
-        <td>the Bird</td>
-        <td>@twitter</td>
-      </tr>
+      
     </tbody>
   </table>
 </div>
