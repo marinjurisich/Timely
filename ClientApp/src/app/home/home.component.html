@@ -1,0 +1,74 @@
+<div class="d-block w-100 text-center pt-5">
+  <button class="btn btn-primary btn-lg" (click)="start_timer();" *ngIf="clicked==false; else stopButton;">Start</button>
+  <ng-template #stopButton>
+    <!-- Trigger/Open The Modal -->
+    <button id="myBtn" class="btn btn-primary btn-lg" (click)="open_modal();">Stop</button>
+  </ng-template>
+
+</div>
+
+
+
+<!-- The Modal -->
+<div id="myModal" class="custom_modal d-none">
+
+  <!-- Modal content -->
+  <div class="modal_content">
+
+    <div class="modal-header">
+      <h5 class="modal-title">Modal title</h5>
+      <button type="button" class="close" (click)="close_modal();" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="pt-3 justify-content-around">
+        <input type="text" placeholder="Input project name" class="form-control" />
+      </div>
+      <p>Some text in the Modal..</p>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-primary">Save changes</button>
+      <button type="button" class="btn btn-secondary" (click)="close_modal();" data-dismiss="modal">Close</button>
+    </div>
+  </div>
+  </div>
+
+<!-- Counter -->
+<div class="pt-3 mb-3">
+  <p id="counter_display">{{ timerDisplay.seconds["digit1"]}}: {{ timerDisplay.seconds["digit2"] }}</p>
+</div>
+
+
+<div class="w-100 justify-content-center d-block pt-5">
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">First</th>
+        <th scope="col">Last</th>
+        <th scope="col">Handle</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <th scope="row">1</th>
+        <td>Mark</td>
+        <td>Otto</td>
+        <td>@mdo</td>
+      </tr>
+      <tr>
+        <th scope="row">2</th>
+        <td>Jacob</td>
+        <td>Thornton</td>
+        <td>@fat</td>
+      </tr>
+      <tr>
+        <th scope="row">3</th>
+        <td>Larry</td>
+        <td>the Bird</td>
+        <td>@twitter</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
