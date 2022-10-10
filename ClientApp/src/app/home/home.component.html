@@ -1,23 +1,21 @@
 <div class="d-block w-100 text-center pt-5">
-  <button class="btn btn-primary btn-lg" (click)="start_timer();" *ngIf="clicked==false; else stopButton;">Start</button>
+  <button class="btn btn-primary btn-lg" (click)="startTimer();" *ngIf="clicked==false; else stopButton;">Start</button>
   <ng-template #stopButton>
     <!-- Trigger/Open The Modal -->
-    <button id="myBtn" class="btn btn-primary btn-lg" (click)="stop_timer();">Stop</button>
+    <button id="myBtn" class="btn btn-primary btn-lg" (click)="stopTimer();">Stop</button>
   </ng-template>
 
 </div>
 
-
-
 <!-- The Modal -->
-<div id="myModal" class="custom_modal d-none">
+<div id="myModal" class="customModal d-none">
 
   <!-- Modal content -->
   <div class="modal_content">
 
     <div class="modal-header">
       <h5 class="modal-title">Project</h5>
-      <button type="button" class="close" (click)="close_modal();" data-dismiss="modal" aria-label="Close">
+      <button type="button" class="close" (click)="closeModal();" data-dismiss="modal" aria-label="Close">
         <span aria-hidden="true">&times;</span>
       </button>
     </div>
@@ -28,8 +26,12 @@
       
     </div>
     <div class="modal-footer">
-      <button type="button" class="btn btn-primary" (click)="saveProject();close_modal();">Save changes</button>
-      <button type="button" class="btn btn-secondary" (click)="close_modal();" data-dismiss="modal">Close</button>
+      <button type="button" class="btn btn-outline-danger float-left" (click)="deleteCurrent();close_modal()">Delete current</button>
+      <div class="float-right">
+        <button type="button" class="btn btn-primary" (click)="saveProject();closeModal();">Save changes</button>
+        <button type="button" class="btn btn-secondary" (click)="closeModal();" data-dismiss="modal">Close</button>
+      </div>
+
     </div>
   </div>
   </div>
@@ -38,7 +40,9 @@
 <div class="w-100 justify-content-center d-block mt-3">
   <!-- Counter -->
   <div class="pt-3 mb-3">
+    <p class="text-muted h6" id="projectNameDisplay"></p>
     <p class="text-muted h3" id="counter_display">{{ timerDisplay["hours"]["digit1"]}}{{ timerDisplay["hours"]["digit2"] }}:{{ timerDisplay.minutes["digit1"]}}{{ timerDisplay.minutes["digit2"] }}:{{ timerDisplay.seconds["digit1"]}}{{ timerDisplay.seconds["digit2"] }}</p>
+    <button id="resetButton" class="btn btn-secondary d-none" (click)="reset();">Reset</button>
   </div>
 
   <table id="dataTable" class="table table-striped d-none">
@@ -49,6 +53,7 @@
         <th scope="col">Start</th>
         <th scope="col">End</th>
         <th scope="col">Duration</th>
+        <th scope="col"></th>
       </tr>
     </thead>
     <tbody>
@@ -58,12 +63,19 @@
         <td>{{p.StartTime}}</td>
         <td>{{p.EndTime}}</td>
         <td>
-          {{p.Duration["hours"]["digit1"]}}{{ p.Duration["hours"]["digit2"] }}:{{ p.Duration.minutes["digit1"]}}{{ p.Duration.minutes["digit2"] }}:{{ p.Duration.seconds["digit1"]}}{{ p.Duration.seconds["digit2"] }}
+          {{p.DurationDisplay["hours"]["digit1"]}}{{ p.DurationDisplay["hours"]["digit2"] }}:{{ p.DurationDisplay.minutes["digit1"]}}{{ p.DurationDisplay.minutes["digit2"] }}:{{ p.DurationDisplay.seconds["digit1"]}}{{ p.DurationDisplay.seconds["digit2"] }}
+        </td>
+        <td>
+          <button class="btn btn-outline-primary btn-sm" (click)="editProject(p.Id);">Edit</button>
+          <button class="btn btn-outline-danger btn-sm ml-1" (click)="deleteProject(p.Id);">Delete</button>
         </td>
       </tr>
       
     </tbody>
   </table>
-  <button #goBack class="btn btn-primary" *ngIf="firstIndex > 0" data-id="{{ firstIndex }}" (click)="prev_10(goBack)"><</button>
-  <button #goForward class="btn btn-primary" *ngIf="lastIndex > 0" data-id="{{ lastIndex }}" (click)="next_10(goForward);">></button>
+  <div class="d-block float-right mb-3 mt-1">
+    <button class="btn btn-primary float-left" *ngIf="firstIndex > 0" (click)="loadData(firstIndex,true)"><</button>
+    <button class="btn btn-primary float-right ml-1" *ngIf="lastIndex > 0" (click)="loadData(lastIndex);">></button>
+  </div>
+    
 </div>

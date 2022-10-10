@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Timely.Models {
     public class Project {
@@ -27,6 +24,11 @@ namespace Timely.Models {
             StartTime = startTime;
             EndTime = endTime;
             Duration = duration;
+        }
+
+        //constructor for deleting from the database
+        public Project(int id) {
+            Id = id;
         }
     }
 }
