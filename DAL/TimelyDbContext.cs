@@ -1,8 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Timely.Models;
 
 namespace Timely.DAL {
@@ -13,5 +9,6 @@ namespace Timely.DAL {
         }
 
         public DbSet<Project> Projects { get; set; }
+
     }
 }

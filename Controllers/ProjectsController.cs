@@ -12,6 +12,9 @@ using Timely.Models;
 using System.Net.Http;
 using System.IO;
 using Newtonsoft.Json;
+using Microsoft.EntityFrameworkCore;
+using OfficeOpenXml;
+using System.Globalization;
 
 namespace Timely.Controllers {
     [Route("api/[controller]/{action}/{id?}")]
@@ -128,6 +131,39 @@ namespace Timely.Controllers {
                 .ToList();
 
             return new JsonResult(list);
+
+        }
+
+
+        [HttpGet]
+        public ActionResult Export() {
+
+            var projectsDT = _context.Projects.ToListAsync().Result.ToDataTable();
+
+            ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+            using (ExcelPackage package = new ExcelPackage()) {
+                var ws = package.Workbook.Worksheets.Add("Projects");
+                //true generates headers
+                ws.Cells["A1"].LoadFromDataTable(projectsDT, true);
+
+                //set column data format so dates are shown
+                ws.Column(3).Style.Numberformat.Format = DateTimeFormatInfo.CurrentInfo.ShortDatePattern;
+                ws.Column(4).Style.Numberformat.Format = DateTimeFormatInfo.CurrentInfo.ShortDatePattern;
+
+                //set column with so data is displayed correctly
+                ws.Column(2).Width = 25;
+                ws.Column(3).Width = 15;
+                ws.Column(4).Width = 15;
+
+                var stream = new MemoryStream();
+                package.SaveAs(stream);
+
+                string fileName = "projectsExport.xlsx";
+                string contentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+
+                stream.Position = 0;
+                return File(stream, contentType, fileName);
+            }
 
         }
 
