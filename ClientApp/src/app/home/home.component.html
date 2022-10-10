@@ -23,12 +23,12 @@
     </div>
     <div class="modal-body">
       <div class="pt-3 justify-content-around">
-        <input type="text" placeholder="Input project name" class="form-control" />
+        <input id="projectNameInput" type="text" placeholder="Input project name" class="form-control" />
       </div>
       
     </div>
     <div class="modal-footer">
-      <button type="button" class="btn btn-primary" (click)="load_data();close_modal();">Save changes</button>
+      <button type="button" class="btn btn-primary" (click)="saveProject();close_modal();">Save changes</button>
       <button type="button" class="btn btn-secondary" (click)="close_modal();" data-dismiss="modal">Close</button>
     </div>
   </div>
@@ -38,7 +38,7 @@
 <div class="w-100 justify-content-center d-block mt-3">
   <!-- Counter -->
   <div class="pt-3 mb-3">
-    <p class="text-muted h3" id="counter_display">{{ this.timerDisplay["hours"]["digit1"]}}{{ this.timerDisplay["hours"]["digit2"] }}:{{ timerDisplay.minutes["digit1"]}}{{ timerDisplay.minutes["digit2"] }}:{{ timerDisplay.seconds["digit1"]}}{{ timerDisplay.seconds["digit2"] }}</p>
+    <p class="text-muted h3" id="counter_display">{{ timerDisplay["hours"]["digit1"]}}{{ timerDisplay["hours"]["digit2"] }}:{{ timerDisplay.minutes["digit1"]}}{{ timerDisplay.minutes["digit2"] }}:{{ timerDisplay.seconds["digit1"]}}{{ timerDisplay.seconds["digit2"] }}</p>
   </div>
 
   <table id="dataTable" class="table table-striped d-none">
@@ -52,13 +52,18 @@
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor='let p of project; let i = index'> 
+      <tr *ngFor='let p of projects; let i = index'> 
         <th scope="row">{{i+1}}</th>
         <td>{{p.Name}}</td>
         <td>{{p.StartTime}}</td>
         <td>{{p.EndTime}}</td>
+        <td>
+          {{p.Duration["hours"]["digit1"]}}{{ p.Duration["hours"]["digit2"] }}:{{ p.Duration.minutes["digit1"]}}{{ p.Duration.minutes["digit2"] }}:{{ p.Duration.seconds["digit1"]}}{{ p.Duration.seconds["digit2"] }}
+        </td>
       </tr>
       
     </tbody>
   </table>
+  <button #goBack class="btn btn-primary" *ngIf="firstIndex > 0" data-id="{{ firstIndex }}" (click)="prev_10(goBack)"><</button>
+  <button #goForward class="btn btn-primary" *ngIf="lastIndex > 0" data-id="{{ lastIndex }}" (click)="next_10(goForward);">></button>
 </div>

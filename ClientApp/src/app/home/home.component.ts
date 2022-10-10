@@ -21,22 +21,23 @@ export class HomeComponent {
     minutes: { digit1: string; digit2: string; },
     seconds: { digit1: string; digit2: string; },
   };
-  public project: {};//{ Name: string, StartTime: Date, EndTime: Date };
-  public project_list: [];
-
+  public lastIndex: number;
+  public firstIndex: number;
+  public projects: {};
 
   constructor(private http: HttpClient) { }
 
   start_timer = () => {
 
+    //start timer
     this.StartTime = new Date();
-
-    this.clicked = true;
-
     this.timer_subscription = timer(0, 1000).subscribe(ec => {
       this.time++;
       this.timerDisplay = this.getDisplayTimer(this.time);
     });
+
+    //hide start button, display stop button
+    this.clicked = true;
 
   }
 
@@ -54,6 +55,7 @@ export class HomeComponent {
 
   }
 
+  //parse time into readable string
   getDisplayTimer(time: number) {
 
     const hours = '0' + Math.floor(time / 3600);
@@ -68,11 +70,77 @@ export class HomeComponent {
 
   }
 
-  load_data = async () => {
+
+  load_data = async (index: string = "0", reverse: boolean = false) => {
     debugger;
-    this.http.get('/api/Projects/Get', {}).subscribe(j => this.project = j);
+    var url: string; 
+
+    if (reverse) {
+      url = "/api/Projects/GetReversed?lastId=" + index;
+    } else {
+      url = "/api/Projects/Get?lastId=" + index;
+    }
+
+    this.http.get(url, {}).subscribe(p => {
+
+      // @ts-ignore
+      for (var project of p) {
+        //parse time into string to display
+        project["Duration"] = this.getDisplayTimer(project["Duration"]);
+
+        //parse datetimes
+        let start: Date = new Date(project["StartTime"]);
+        let end: Date = new Date(project["EndTime"]);
+        project["StartTime"] = start.toDateString() + ", " + start.toLocaleTimeString();
+        project["EndTime"] = end.toDateString() + ", " + end.toLocaleTimeString();
+
+      }
+
+      debugger;
+
+      if (reverse) {
+        // @ts-ignore
+        p = p.reverse();
+      }
+
+      //fetch id of first and last element for pagination
+      // @ts-ignore
+      this.lastIndex = p.at(-1)["Id"];
+      // @ts-ignore
+      this.firstIndex = p.at(0)["Id"];
+
+      this.projects = p;
+
+    });
+    //display table
     document.getElementById("dataTable").classList.remove("d-none");
 
+  }
+
+  saveProject = async () => {
+    debugger;
+    // @ts-ignore
+    var projectName: string = document.getElementById("projectNameInput").value;
+    let project: {} = {};
+
+    project["Name"] = projectName;
+    project["StartTime"] = this.StartTime.toISOString();
+    project["EndTime"] = this.EndTime.toISOString();
+    project["Duration"] = this.time;
+
+    await this.http.post<any>("/api/Projects/Save", project)
+      .subscribe();
+
+    await this.load_data();
+
+  }
+
+  next_10 = (elem) => {
+    this.load_data(elem.id);
+  }
+
+  prev_10 = (elem) => {
+    this.load_data(elem.id, true);
   }
 
   open_modal = () => {
@@ -85,6 +153,7 @@ export class HomeComponent {
 
   ngOnInit() {
 
+    //set event to close modal on click outside of modal
     window.onclick = function (event) {
       if (event.target == document.getElementsByClassName("custom_modal")[0]) {
         document.getElementsByClassName("custom_modal")[0].classList.add("d-none");
